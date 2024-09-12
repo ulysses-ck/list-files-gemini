@@ -1,6 +1,8 @@
 import { fileManager } from "@/gemini";
 import { deleteFile } from "./actions";
 
+export const revalidate = 10;
+
 export default async function Home() {
   const response = await fileManager.listFiles();
 
@@ -13,13 +15,30 @@ export default async function Home() {
       <div>
         <h2>Result</h2>
         <ul>
-          {response && response.files
+          <li>
+            <div className="grid grid-cols-5 items-center justify-center">
+              <span>File Name</span>
+              <span>Size</span>
+              <span>Create Time</span>
+
+              <span>URI</span>
+              <span>Action</span>
+            </div>
+          </li>
+
+          {response.files
             ? response.files.map((file) => {
                 return (
                   <li key={file.sha256Hash}>
-                    <div className="grid grid-cols-3 items-center justify-center">
+                    <div className="grid grid-cols-5 items-center justify-center">
                       <span className="border border-b-black w-full break-words">
                         {file.name}
+                      </span>
+                      <span className="border border-b-black w-full break-words">
+                        {file.sizeBytes}
+                      </span>
+                      <span className="border border-b-black w-full break-words">
+                        {new Date(file.createTime).toLocaleString()}
                       </span>
                       <span className="border border-b-black w-full break-words">
                         {file.uri}
